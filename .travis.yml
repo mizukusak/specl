@@ -94,15 +94,22 @@ install:
   - sudo luarocks make specl-14.0.0-1.rockspec LUA="$LUA"
 
 script:
-  # Use Lua 5.3 compatible rocks, where available.
   - 'for rock in ""; do
        if test -z "$rock"; then break; fi;
        if luarocks list | grep "^$rock$" >/dev/null; then continue; fi;
        sudo luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
     done'
-  - test -f configure || ./bootstrap
-  - test -f Makefile || ./configure
-  - make clean all check V=1
+
+  - 'if test -f configure; then
+      touch aclocal.m4;
+      sleep 1; touch Makefile.in;
+      sleep 1; touch config.h.in;
+      sleep 1; touch configure;
+    else
+      ./bootstrap;
+    fi'
+  - ./configure --disable-silent-rules
+  - make all check
 
 
 # Run sanity checks on CI server, ignoring buggy automakes.
