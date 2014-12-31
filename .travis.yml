@@ -105,7 +105,7 @@ install:
 
   # Clean up files created by root
   - sudo git clean -dfx
-  - sudo rm -f slingshot
+  - sudo rm -rf slingshot
   
 
 script:
