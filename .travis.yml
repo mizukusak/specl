@@ -112,7 +112,7 @@ script:
   - test -f configure || ./bootstrap --verbose
   - test -f Makefile || ./configure --disable-silent-rules LUA="$LUA"
   - make
-  - ./bin/specl -vfreport --unicode
+  - make check V=1
 
 # Run sanity checks on CI server, ignoring buggy automakes.
 after_success:
