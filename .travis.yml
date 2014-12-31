@@ -101,11 +101,11 @@ install:
     done'
 
   # Run bootstrap automatically from git rockspec.
-  - sudo luarocks make $ROCKSPEC LUA="$LUA"
+  - sudo luarocks install $ROCKSPEC LUA="$LUA"
 
   # Clean up files created by root
-  - sudo git clean -dfx
-  - sudo rm -rf slingshot
+  #- sudo git clean -dfx
+  #- sudo rm -rf slingshot
   
 
 script:
