@@ -109,7 +109,14 @@ install:
 
 
 script:
-  - test -f configure || ./bootstrap --verbose
+  - 'if test -f configure; then
+      touch aclocal.m4;
+      sleep 1; touch Makefile.in;
+      sleep 1; touch config.h.in;
+      sleep 1; touch configure;
+    else
+      ./bootstrap --verbose;
+    fi'
   - test -f Makefile || ./configure --disable-silent-rules LUA="$LUA"
   - make
   - make check V=1
