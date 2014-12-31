@@ -100,20 +100,18 @@ install:
        sudo luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
     done'
 
-  # Initial bootstrap to generate Makefile for rockspecs.
-  #- ./bootstrap
-  #- ./configure LUA="$LUA"
-  #- make rockspecs V=1
-  #  || cat $ROCKSPEC
-
-  # Rerun bootstrap automatically from git rockspec.
+  # Run bootstrap automatically from git rockspec.
   - sudo luarocks make $ROCKSPEC LUA="$LUA"
-  #- sudo make clean
+
+  # Clean up files created by root
+  - sudo git clean -dfx
+  - sudo rm -f slingshot
   
 
 script:
   #- make all check V=1
   - ./bootstrap --verbose
+  - test -f .travis.yml.new && diff -u .travis.yml .travis.yml.new
   - ./configure --disable-silent-rules LUA="$LUA"
   - ./bin/specl -vfreport --unicode
 
