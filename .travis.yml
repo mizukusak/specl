@@ -8,8 +8,6 @@ env:
     - _LINK="libtool --mode=link --tag=CC gcc"
     - _LIBS="-lm -Wl,-E -ldl -lreadline"
 
-    - ROCKSPEC=specl-git-1.rockspec
-
     - prefix=/usr/local
     - bindir=$prefix/bin
     - incdir=$prefix/include
@@ -100,18 +98,19 @@ install:
        sudo luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
     done'
 
-  # Run bootstrap automatically from git rockspec.
-  - sudo luarocks install $ROCKSPEC LUA="$LUA"
+  # Build from rockspec.
+  - export ROCKSPEC=specl-14.0.0-1.rockspec
+  - 'test -f "$ROCKSPEC" || ROCKSPEC=specl-git-1.rockspec'
+  - sudo luarocks make $ROCKSPEC LUA="$LUA"
 
   # Clean up files created by root
-  #- sudo git clean -dfx
-  #- sudo rm -rf slingshot
+  - sudo git clean -dfx
+  - sudo rm -rf slingshot
   
 
 script:
   #- make all check V=1
-  - ./bootstrap --verbose
-  - test -f .travis.yml.new && diff -u .travis.yml .travis.yml.new
+  - test -f configure || ./bootstrap --verbose
   - ./configure --disable-silent-rules LUA="$LUA"
   - ./bin/specl -vfreport --unicode
 
