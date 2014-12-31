@@ -94,26 +94,28 @@ before_install:
 
 install:
   # Use Lua 5.3 compatible rocks, where available.
-  - 'for rock in ""; do
+  - 'for rock in ansicolors luaposix""; do
        if test -z "$rock"; then break; fi;
        if luarocks list | grep "^$rock$" >/dev/null; then continue; fi;
        sudo luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
     done'
 
   # Initial bootstrap to generate Makefile for rockspecs.
-  - ./bootstrap
-  - ./configure LUA="$LUA"
-  - make rockspecs V=1
-    || cat $ROCKSPEC
+  #- ./bootstrap
+  #- ./configure LUA="$LUA"
+  #- make rockspecs V=1
+  #  || cat $ROCKSPEC
 
   # Rerun bootstrap automatically from git rockspec.
   - sudo luarocks make $ROCKSPEC LUA="$LUA"
-  - sudo make clean
-
+  #- sudo make clean
+  
 
 script:
-  - make all check V=1
-
+  #- make all check V=1
+  - ./bootstrap --verbose
+  - ./configure --disable-silent-rules LUA="$LUA"
+  - ./bin/specl -vfreport --unicode
 
 # Run sanity checks on CI server, ignoring buggy automakes.
 after_success:
